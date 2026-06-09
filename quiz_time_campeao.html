@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Time Campeão - Tecomat Integra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a2540 0%, #1a4d7a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a2540 0%, #1a4d7a 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .logo {
+            font-size: 14px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .question-section {
+            margin-bottom: 40px;
+        }
+
+        .question-number {
+            color: #FFB81C;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            color: #0a2540;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: #e8f0f7;
+            border-color: #0a2540;
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #FFB81C;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-reset {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-reset:hover {
+            background: #bbb;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #FFB81C 0%, #FFA500 100%);
+            color: #0a2540;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 184, 28, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Resultado */
+        .result-section {
+            display: none;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            color: #0a2540;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .result-type {
+            color: #FFB81C;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .result-description {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #FFB81C;
+        }
+
+        .result-message {
+            color: #0a2540;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8f0f7 0%, #f0f4f8 100%);
+            border-radius: 8px;
+        }
+
+        .social-share {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+
+        .social-share p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: 2px solid #ddd;
+            background: white;
+            color: #333;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: #0a2540;
+            color: white;
+            border-color: #0a2540;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #ddd;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FFB81C 0%, #FFA500 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .option {
+                padding: 12px;
+            }
+
+            .result-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="header">
+            <h1>⚽ TIME CAMPEÃO ⚽</h1>
+            <p>Você Entende o Jogo?</p>
+            <div class="logo">Tecomat Engenharia</div>
+        </div>
+
+        <div class="content">
+            <!-- Quiz Section -->
+            <div id="quizSection">
+                <div class="question-section">
+                    <div class="question-number">Pergunta 1 de 3</div>
+                    <div class="question-text">Quando surge um desafio, você:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1_a" name="question1" value="A">
+                            <label for="q1_a">Resolve rápido e move para o próximo</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1_b" name="question1" value="B">
+                            <label for="q1_b">Analisa, planeja e depois executa</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1_c" name="question1" value="C">
+                            <label for="q1_c">Chama o time para resolver junto</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1_d" name="question1" value="D">
+                            <label for="q1_d">Busca o melhor resultado possível</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question-number">Pergunta 2 de 3</div>
+                    <div class="question-text">O que você mais valoriza no trabalho?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2_a" name="question2" value="A">
+                            <label for="q2_a">Cumprir metas com excelência</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2_b" name="question2" value="B">
+                            <label for="q2_b">Aprender e evoluir constantemente</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2_c" name="question2" value="C">
+                            <label for="q2_c">Trabalhar em equipe e integrar pessoas</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2_d" name="question2" value="D">
+                            <label for="q2_d">Ver o resultado coletivo virar sucesso</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="question-number">Pergunta 3 de 3</div>
+                    <div class="question-text">Quando a equipe erra, você:</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3_a" name="question3" value="A">
+                            <label for="q3_a">Identifica o erro e propõe solução</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_b" name="question3" value="B">
+                            <label for="q3_b">Apoia o colega e reforça o aprendizado</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_c" name="question3" value="C">
+                            <label for="q3_c">Reconhece como oportunidade de melhoria</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3_d" name="question3" value="D">
+                            <label for="q3_d">Foca em não repetir e segue em frente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button class="btn btn-reset" onclick="resetQuiz()">Resetar</button>
+                    <button class="btn btn-submit" id="submitBtn" onclick="calculateResult()">Ver Resultado</button>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div id="resultSection" class="result-section">
+                <div class="result-icon" id="resultIcon"></div>
+                <div class="result-type" id="resultType"></div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-description" id="resultDescription"></div>
+                <div class="result-message">
+                    Você é parte essencial do <strong>TIME CAMPEÃO</strong>
+                </div>
+                <div class="social-share">
+                    <p>Compartilhe seu resultado:</p>
+                    <div class="share-buttons">
+                        <button class="share-btn" onclick="shareWhatsApp()">📱 WhatsApp</button>
+                        <button class="share-btn" onclick="shareEmail()">📧 Email</button>
+                        <button class="share-btn" onclick="copyLink()">🔗 Copiar Link</button>
+                    </div>
+                </div>
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-submit" onclick="resetQuiz()">Fazer Novamente</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Campanha Time Campeão - Tecomat Engenharia 2026</p>
+            <p>Desenvolvido com ❤️ para você</p>
+        </div>
+    </div>
+
+    <script>
+        const results = {
+            A: {
+                icon: '💪',
+                title: 'EXECUTOR',
+                type: 'O Atacante do Time',
+                description: 'Você é o atacante do nosso time! Objetivo, ágil e focado em resultados. Sua força é entregar rápido e sem demoras. O time campeão precisa de gente como você para transformar estratégia em vitória. Você é essencial!'
+            },
+            B: {
+                icon: '🧠',
+                title: 'ESTRATEGISTA',
+                type: 'O Maestro do Jogo',
+                description: 'Você é o maestro do jogo! Pensa grande, planeja bem e executa com precisão. Sua força é a visão de futuro e a capacidade de antecipar movimentos. Você nos leva longe. O time segue sua estratégia para vencer.'
+            },
+            C: {
+                icon: '❤️',
+                title: 'INTEGRADOR',
+                type: 'O Coração do Time',
+                description: 'Você é o coração do time! Conecta pessoas, fortalece laços e faz todos jogarem juntos. Sua força é a harmonia e a capacidade de unir. Sem você, não somos campeões. Sua liderança integra e potencializa!'
+            },
+            D: {
+                icon: '🏆',
+                title: 'VENCEDOR',
+                type: 'O Líder Nato',
+                description: 'Você é o líder nato! Foco, consistência e visão de vitória. Sua força é inspirar e motivar. O time segue onde você vai. Sua determinação nos impulsiona para a vitória. Você é o campeão que todo time precisa!'
+            }
+        };
+
+        function calculateResult() {
+            const q1 = document.querySelector('input[name="question1"]:checked');
+            const q2 = document.querySelector('input[name="question2"]:checked');
+            const q3 = document.querySelector('input[name="question3"]:checked');
+
+            if (!q1 || !q2 || !q3) {
+                alert('Por favor, responda todas as perguntas!');
+                return;
+            }
+
+            const count = {
+                A: 0,
+                B: 0,
+                C: 0,
+                D: 0
+            };
+
+            count[q1.value]++;
+            count[q2.value]++;
+            count[q3.value]++;
+
+            let result = 'A';
+            let maxCount = 0;
+
+            for (let key in count) {
+                if (count[key] > maxCount) {
+                    maxCount = count[key];
+                    result = key;
+                }
+            }
+
+            if (count[result] === count[Object.keys(count).find(k => k !== result && count[k] === maxCount)]) {
+                const keys = Object.keys(count).filter(k => count[k] === maxCount);
+                result = keys[Math.floor(Math.random() * keys.length)];
+            }
+
+            showResult(result);
+        }
+
+        function showResult(resultType) {
+            const result = results[resultType];
+            
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultSection').classList.add('show');
+            
+            document.getElementById('resultIcon').textContent = result.icon;
+            document.getElementById('resultType').textContent = result.type;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultDescription').textContent = result.description;
+
+            updateProgress(100);
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('resultSection').classList.remove('show');
+            
+            updateProgress(0);
+        }
+
+        function updateProgress() {
+            const totalQuestions = 3;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function shareWhatsApp() {
+            const text = 'Eu sou ' + document.getElementById('resultTitle').textContent + '! Descubra qual é sua posição no TIME CAMPEÃO da Tecomat! 🏆⚽';
+            const url = 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + window.location.href);
+            window.open(url, '_blank');
+        }
+
+        function shareEmail() {
+            const subject = 'Descubra sua posição no TIME CAMPEÃO!';
+            const body = 'Eu sou ' + document.getElementById('resultTitle').textContent + '! Faça o quiz e descubra qual é sua posição no TIME CAMPEÃO da Tecomat:\n\n' + window.location.href;
+            window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copiado para a área de transferência!');
+        }
+
+        // Update progress as user selects options
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.addEventListener('change', updateProgress);
+        });
+
+        updateProgress();
+    </script>
+</body>
+</html>
